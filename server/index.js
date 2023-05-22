@@ -23,7 +23,7 @@ const startFunctionWithInterval = () => {
   // Set interval to call the function every 60 seconds
   const intervalId = setInterval(() => {
     postMuffinPhoto();
-  }, 60000);
+  }, 1800000);
 };
 
 // Start the function with interval
