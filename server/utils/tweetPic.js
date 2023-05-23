@@ -1,5 +1,5 @@
 require("dotenv").config({
-  path: "./.env",
+  path: "../.env",
 });
 const Twit = require("twit");
 const { getPics } = require("./getPics");
@@ -29,19 +29,26 @@ const tweetPic = async (pageNum) => {
     T.postMediaChunked({ file_path: mediaData }, (err, data, response) => {
       if (!err) {
         const mediaIdStr = data.media_id_string;
-        const params = {
-          media_ids: [mediaIdStr],
+        let params = {
+          media_id: mediaIdStr,
           alt_text: { text: altText },
         };
-        T.post("statuses/update", params, (err, data, response) => {
+        T.post("media/metadata/create", params, (err, data, response) => {
           if (!err) {
-            console.log("Image posted successfully!");
+            params = { media_ids: [mediaIdStr] };
+            T.post("statuses/update", params, function (err, data, response) {
+              if (!err) {
+                console.log("Image posted successfully!");
+              } else {
+                throw new Error(err);
+              }
+            });
           } else {
-            throw new Error("Error occurred while posting the image:", err);
+            throw new Error(err);
           }
         });
       } else {
-        throw new Error("Error occurred while uploading the image:", err);
+        throw new Error(err);
       }
     });
   } catch (error) {
