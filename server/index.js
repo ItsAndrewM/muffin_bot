@@ -1,7 +1,7 @@
 const { getPics } = require("./utils/getPics");
 const { tweetPic } = require("./utils/tweetPic");
 
-let counter = 5;
+let counter = 32;
 let intervalId;
 const pics = getPics(1);
 const targetCounter = pics.total_results;
