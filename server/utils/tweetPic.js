@@ -4,9 +4,15 @@ require("dotenv").config({
 const Twit = require("twit");
 const { getPics } = require("./getPics");
 const download = require("download");
+const { quotes } = require("../data/quotes");
+
+const randomNum = (max) => {
+  return Math.floor(Math.random() * (max - 0));
+}
 
 const tweetPic = async (pageNum) => {
   try {
+    const num = randomNum(quotes.length);
     const T = await new Twit({
       consumer_key: process.env.TWITTER_API_KEY,
       consumer_secret: process.env.TWITTER_API_SECRET,
@@ -19,7 +25,7 @@ const tweetPic = async (pageNum) => {
     const altText = imageData.photos[0].alt;
     const picName =
       imageData.photos[0].src.original.split("/")[
-        imageData.photos[0].src.original.split("/").length - 1
+      imageData.photos[0].src.original.split("/").length - 1
       ];
 
     const filePath = "./assets";
@@ -35,7 +41,7 @@ const tweetPic = async (pageNum) => {
         };
         T.post("media/metadata/create", params, (err, data, response) => {
           if (!err) {
-            params = { media_ids: [mediaIdStr] };
+            params = { status: quotes[num].quote, media_ids: [mediaIdStr] };
             T.post("statuses/update", params, function (err, data, response) {
               if (!err) {
                 console.log("Image posted successfully!");
